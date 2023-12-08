@@ -9,7 +9,7 @@ export async function getChatResponse(messages: Message[], apiKey: string) {
   const configuration = new Configuration({
     apiKey: apiKey,
   });
-  // ブラウザからAPIを叩くときに発生するエラーを無くすworkaround
+  //消除从浏览器中敲API时发生的错误的workaround
   // https://github.com/openai/openai-node/issues/6#issuecomment-1492814621
   delete configuration.baseOptions.headers["User-Agent"];
 
@@ -43,15 +43,38 @@ export async function getChatResponseStream(
   //const url = "http://58.215.177.171:6020/v1/chat/completions"; //"https://openkey.cloud/v1/chat/completions"; //https://api.openai.com/v1/chat/completions
   //const model = "Qwen-7B-Chat";
 
-  // ChatGPT
-  apiKey = "sk-jEVBsZOasELDM8ROWhYoDsPp3uaFKcac1XDuHtkibhfwhzBB";
-  const url = "https://openkey.cloud/v1/chat/completions"; //https://api.openai.com/v1/chat/completions
-  const model = "gpt-3.5-turbo"; // "Qwen-7B-Chat", gpt-3.5-turbo, gpt-3.5-turbo-3.5-turbo
+  var url;
+  var model;
+  if (1) {
+    // ChatGPT
+    url = "https://openkey.cloud/v1/chat/completions"; //https://api.openai.com/v1/chat/completions
+    model = "gpt-3.5-turbo"; // "Qwen-7B-Chat", gpt-3.5-turbo, gpt-3.5-turbo-3.5-turbo
+    apiKey = "sk-jEVBsZOasELDM8ROWhYoDsPp3uaFKcac1XDuHtkibhfwhzBB";
+    apiKey = "sk-fZzTeIew3ySUkgMoXKiBIm8Cqp2o0MmWXGnaJUFM2J9WlJ6d";
+  } else {
+    // mingsiji
+    url = "http://58.215.177.171:6020/v1/chat/completions"; //https://api.openai.com/v1/chat/completions
+    model = "Qwen-7B-Chat"; // "Qwen-7B-Chat", gpt-3.5-turbo, gpt-3.5-turbo-3.5-turbo
+    apiKey = "sk-cCwAxfqbrU2DlKVIA6B36b75B4924eE09e9eCbD378B7B3Be";
+  }
 
+/*
+  curl https://openkey.cloud/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sk-fZzTeIew3ySUkgMoXKiBIm8Cqp2o0MmWXGnaJUFM2J9WlJ6d" \
+  -d '{
+     "model": "gpt-3.5-turbo",
+     "messages": [{"role": "user", "content": "Say this is a test!"}],
+     "temperature": 0.7
+   }'
+*/
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${apiKey}`,
+    "Authorization": `Bearer ${apiKey}`,
   };
+
+  console.log("url=", url);
+  console.log("header=", headers);
 
   const res = await fetch(url, {
     headers: headers,
