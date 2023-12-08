@@ -8,10 +8,10 @@ import { AutoLookAt } from "./autoLookAt";
 import { AutoBlink } from "./autoBlink";
 
 /**
- * Expressionを管理するクラス
- *
- * 主に前の表情を保持しておいて次の表情を適用する際に0に戻す作業や、
- * 前の表情が終わるまで待ってから表情適用する役割を持っている。
+ * 管理Expression的类
+ * 
+ * 主要是保持前面表情，在应用下一个表情时返回到0的作业
+ * 具有等到前面的表情结束后再应用表情的作用。
  */
 export class ExpressionController {
   private _autoLookAt: AutoLookAt;

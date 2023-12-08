@@ -1,10 +1,10 @@
 import * as THREE from "three";
 import { VRM } from "@pixiv/three-vrm";
 /**
- * 目線を制御するクラス
+ * 控制视线的类
  *
- * サッケードはVRMLookAtSmootherの中でやっているので、
- * より目線を大きく動かしたい場合はここに実装する。
+ * 因为足球是在VRMLookAtSmoother中进行的
+ * 想要将视线移动得更大时，在这里安装。
  */
 export class AutoLookAt {
   private _lookAtTarget: THREE.Object3D;

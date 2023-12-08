@@ -3,8 +3,8 @@ import { VRM, VRMExpressionPresetName } from "@pixiv/three-vrm";
 import { ExpressionController } from "./expressionController";
 
 /**
- * 感情表現としてExpressionとMotionを操作する為のクラス
- * デモにはExpressionのみが含まれています
+ *用于处理Expression和Motion作为情感表达的类
+ *演示仅包含Expression
  */
 export class EmoteController {
   private _expressionController: ExpressionController;

@@ -15,7 +15,7 @@ export default async function handler(
   if (!apiKey) {
     res
       .status(400)
-      .json({ message: "APIキーが間違っているか、設定されていません。" });
+      .json({ message: "API密钥错误或未设置。" });
 
     return;
   }
@@ -25,14 +25,14 @@ export default async function handler(
   });
 
   const openai = new OpenAIApi(configuration);
-
+  const model = "gpt-3.5-turbo"; //Qwen-7B-Chat, gpt-3.5-turbo
   const { data } = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
+    model: model,
     messages: req.body.messages,
   });
 
   const [aiRes] = data.choices;
-  const message = aiRes.message?.content || "エラーが発生しました";
+  const message = aiRes.message?.content || "发生错误1";
 
   res.status(200).json({ message: message });
 }

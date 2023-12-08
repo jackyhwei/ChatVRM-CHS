@@ -7,6 +7,8 @@ import { Settings } from "./settings";
 import { ViewerContext } from "@/features/vrmViewer/viewerContext";
 import { AssistantText } from "./assistantText";
 
+import { playAction } from "./playaction";
+
 type Props = {
   openAiKey: string;
   systemPrompt: string;
@@ -21,6 +23,7 @@ type Props = {
   handleClickResetChatLog: () => void;
   handleClickResetSystemPrompt: () => void;
   onChangeKoeiromapKey: (key: string) => void;
+  onChangeAction: (key: string) => void;
 };
 export const Menu = ({
   openAiKey,
@@ -36,6 +39,7 @@ export const Menu = ({
   handleClickResetChatLog,
   handleClickResetSystemPrompt,
   onChangeKoeiromapKey,
+  onChangeAction,
 }: Props) => {
   const [showSettings, setShowSettings] = useState(false);
   const [showChatLog, setShowChatLog] = useState(false);
@@ -77,6 +81,13 @@ export const Menu = ({
     fileInputRef.current?.click();
   }, []);
 
+  const handlePlayAction = useCallback(
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      console.log("adfasdf");
+    },
+    [onChangeAction]
+  );
+
   const handleChangeVrmFile = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = event.target.files;
@@ -104,26 +115,41 @@ export const Menu = ({
         <div className="grid grid-flow-col gap-[8px]">
           <IconButton
             iconName="24/Menu"
-            label="設定"
+            label="设定"
             isProcessing={false}
             onClick={() => setShowSettings(true)}
           ></IconButton>
+
+          {/* <IconButton
+            iconName="24/Menu"
+            label="播放动作"
+            isProcessing={false}
+            onClick={() => handlePlayAction}
+          ></IconButton> */}
+
           {showChatLog ? (
             <IconButton
               iconName="24/CommentOutline"
-              label="会話ログ"
+              label="对话历史"
               isProcessing={false}
               onClick={() => setShowChatLog(false)}
             />
           ) : (
             <IconButton
               iconName="24/CommentFill"
-              label="会話ログ"
+              label="对话历史"
               isProcessing={false}
               disabled={chatLog.length <= 0}
               onClick={() => setShowChatLog(true)}
             />
           )}
+
+          {
+          /*
+          <playAction onChangePlayAction = {()=> handlePlayAction()} />
+          */
+          }
+
         </div>
       </div>
       {showChatLog && <ChatLog messages={chatLog} />}

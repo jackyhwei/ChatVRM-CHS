@@ -20,7 +20,7 @@ export default function Home() {
   const { viewer } = useContext(ViewerContext);
 
   const [systemPrompt, setSystemPrompt] = useState(SYSTEM_PROMPT);
-  const [openAiKey, setOpenAiKey] = useState("");
+  const [openAiKey, setOpenAiKey] = useState("sk-cCwAxfqbrU2DlKVIA6B36b75B4924eE09e9eCbD378B7B3Be");
   const [koeiromapKey, setKoeiromapKey] = useState("");
   const [koeiroParam, setKoeiroParam] = useState<KoeiroParam>(DEFAULT_PARAM);
   const [chatProcessing, setChatProcessing] = useState(false);
@@ -58,8 +58,16 @@ export default function Home() {
     [chatLog]
   );
 
+  /*
+  const changeAction = useCallback (
+    (key: string) => {
+      console.log("action:", key);
+    },
+  );
+  */
+
   /**
-   * 文ごとに音声を直列でリクエストしながら再生する
+   *按语句串行请求语音并播放
    */
   const handleSpeakAi = useCallback(
     async (
@@ -73,12 +81,14 @@ export default function Home() {
   );
 
   /**
-   * アシスタントとの会話を行う
+   *与助理对话
    */
   const handleSendChat = useCallback(
     async (text: string) => {
+      console.log("openAiKey: ", openAiKey);
+
       if (!openAiKey) {
-        setAssistantMessage("APIキーが入力されていません");
+        setAssistantMessage("未输入API密钥");
         return;
       }
 
@@ -87,14 +97,14 @@ export default function Home() {
       if (newMessage == null) return;
 
       setChatProcessing(true);
-      // ユーザーの発言を追加して表示
+      //添加并显示用户发言
       const messageLog: Message[] = [
         ...chatLog,
         { role: "user", content: newMessage },
       ];
       setChatLog(messageLog);
 
-      // Chat GPTへ
+      // Chat GPT聊天
       const messages: Message[] = [
         {
           role: "system",
@@ -126,25 +136,30 @@ export default function Home() {
 
           receivedMessage += value;
 
-          // 返答内容のタグ部分の検出
+          console.log("received message: ", receivedMessage);
+
+          // 检测回复内容的标记部分
           const tagMatch = receivedMessage.match(/^\[(.*?)\]/);
           if (tagMatch && tagMatch[0]) {
             tag = tagMatch[0];
             receivedMessage = receivedMessage.slice(tag.length);
           }
 
-          // 返答を一文単位で切り出して処理する
-          const sentenceMatch = receivedMessage.match(
-            /^(.+[。．！？\n]|.{10,}[、,])/
-          );
+          console.log("received message [after sliced]: ", receivedMessage);
+
+          //以一句话为单位进行回答处理。
+          // 如果满足下面两个条件之一，就断句：
+          //  1. 句子中包括了句号（ 。），点（.），感叹号(!), 问号(?)，换行符（\n）
+          //  2. 句子中匹配至少10个任意字符（除了换行符），然后是逗号（,）或顿号（、）之一
+          const sentenceMatch = receivedMessage.match(/^(.+[。．！？\n]|.{10,}[、,])/);
+
           if (sentenceMatch && sentenceMatch[0]) {
+            console.log("sentence: ", sentenceMatch, "sentenceMatch[0]:", sentenceMatch[0]);
             const sentence = sentenceMatch[0];
             sentences.push(sentence);
-            receivedMessage = receivedMessage
-              .slice(sentence.length)
-              .trimStart();
+            receivedMessage = receivedMessage.slice(sentence.length).trimStart();
 
-            // 発話不要/不可能な文字列だった場合はスキップ
+            //不需要说话/不可能的字符串时跳过 
             if (
               !sentence.replace(
                 /^[\s\[\(\{「［（【『〈《〔｛«‹〘〚〛〙›»〕》〉』】）］」\}\)\]]+$/g,
@@ -155,15 +170,22 @@ export default function Home() {
             }
 
             const aiText = `${tag} ${sentence}`;
+
+            console.log("reply 1: ", aiText);
+
             const aiTalks = textsToScreenplay([aiText], koeiroParam);
             aiTextLog += aiText;
 
-            // 文ごとに音声を生成 & 再生、返答を表示
+            //为每个句子生成和播放声音，显示回复 
             const currentAssistantMessage = sentences.join(" ");
             handleSpeakAi(aiTalks[0], () => {
               setAssistantMessage(currentAssistantMessage);
             });
+          } else {
+
           }
+
+
         }
       } catch (e) {
         setChatProcessing(false);
@@ -172,11 +194,13 @@ export default function Home() {
         reader.releaseLock();
       }
 
-      // アシスタントの返答をログに追加
+      //将助手回复添加到日志
       const messageLogAssistant: Message[] = [
         ...messageLog,
         { role: "assistant", content: aiTextLog },
       ];
+
+      console.log("aiTextLog=", aiTextLog);
 
       setChatLog(messageLogAssistant);
       setChatProcessing(false);
@@ -212,7 +236,9 @@ export default function Home() {
         handleClickResetChatLog={() => setChatLog([])}
         handleClickResetSystemPrompt={() => setSystemPrompt(SYSTEM_PROMPT)}
         onChangeKoeiromapKey={setKoeiromapKey}
+        onChangeAction={() => {console.log("adfas")}}
       />
+      
       <GitHubLink />
     </div>
   );

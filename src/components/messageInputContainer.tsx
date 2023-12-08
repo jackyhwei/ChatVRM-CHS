@@ -7,10 +7,8 @@ type Props = {
 };
 
 /**
- * テキスト入力と音声入力を提供する
- *
- * 音声認識の完了時は自動で送信し、返答文の生成中は入力を無効化する
- *
+ * 提供文本输入和语音输入
+ * 完成语音识别时自动发送，生成回复语句时禁用输入
  */
 export const MessageInputContainer = ({
   isChatProcessing,
@@ -21,23 +19,23 @@ export const MessageInputContainer = ({
     useState<SpeechRecognition>();
   const [isMicRecording, setIsMicRecording] = useState(false);
 
-  // 音声認識の結果を処理する
+  // 处理语音识别结果
   const handleRecognitionResult = useCallback(
     (event: SpeechRecognitionEvent) => {
       const text = event.results[0][0].transcript;
       setUserMessage(text);
 
-      // 発言の終了時
+      // 发言结束时
       if (event.results[0].isFinal) {
         setUserMessage(text);
-        // 返答文の生成を開始
+        // 开始生成回复语句
         onChatProcessStart(text);
       }
     },
     [onChatProcessStart]
   );
 
-  // 無音が続いた場合も終了する
+  // 持续无声时也结束
   const handleRecognitionEnd = useCallback(() => {
     setIsMicRecording(false);
   }, []);
@@ -62,14 +60,14 @@ export const MessageInputContainer = ({
     const SpeechRecognition =
       window.webkitSpeechRecognition || window.SpeechRecognition;
 
-    // FirefoxなどSpeechRecognition非対応環境対策
+    // Firefox等SpeechRecognition非对应环境对策
     if (!SpeechRecognition) {
       return;
     }
     const recognition = new SpeechRecognition();
-    recognition.lang = "ja-JP";
-    recognition.interimResults = true; // 認識の途中結果を返す
-    recognition.continuous = false; // 発言の終了時に認識を終了する
+    recognition.lang = "zh-CN";
+    recognition.interimResults=true;  //在识别过程中返回结果
+    recognition.continuous=false;     //发言结束时结束认识
 
     recognition.addEventListener("result", handleRecognitionResult);
     recognition.addEventListener("end", handleRecognitionEnd);

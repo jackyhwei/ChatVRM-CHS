@@ -1,8 +1,8 @@
-/* koeiromap Free v1の制限に対応した声色 */
+/*koeiromap Free v1的限制对应的声色*/
 type ReducedTalkStyle = "talk" | "happy" | "sad";
 
 /**
- * koeiromap Free v1用に声色パラメータを制限する
+ * 为koeiromap Free v1限制声色参数
  */
 export const reduceTalkStyle = (talkStyle: string): ReducedTalkStyle => {
   if (talkStyle == "talk" || talkStyle == "happy" || talkStyle == "sad") {

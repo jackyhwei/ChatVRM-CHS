@@ -1,5 +1,6 @@
 import { koeiromapFreeV1 } from "@/features/koeiromap/koeiromap";
 
+
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {

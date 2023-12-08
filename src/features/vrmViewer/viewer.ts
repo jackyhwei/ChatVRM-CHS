@@ -5,9 +5,9 @@ import { buildUrl } from "@/utils/buildUrl";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 /**
- * three.jsを使った3Dビューワー
+ * three.js的3D查看器
  *
- * setup()でcanvasを渡してから使う
+ * 在setup（）中传递canvas之后使用
  */
 export class Viewer {
   public isReady: boolean;
@@ -59,7 +59,7 @@ export class Viewer {
       const vrma = await loadVRMAnimation(buildUrl("/idle_loop.vrma"));
       if (vrma) this.model.loadAnimation(vrma);
 
-      // HACK: アニメーションの原点がずれているので再生後にカメラ位置を調整する
+      // HACK:动画原点偏移，播放后调整相机位置
       requestAnimationFrame(() => {
         this.resetCamera();
       });
@@ -74,7 +74,7 @@ export class Viewer {
   }
 
   /**
-   * Reactで管理しているCanvasを後から設定する
+   * 以后设置React中管理的Canvas
    */
   public setup(canvas: HTMLCanvasElement) {
     const parentElement = canvas.parentElement;
@@ -111,7 +111,7 @@ export class Viewer {
   }
 
   /**
-   * canvasの親要素を参照してサイズを変更する
+   * 通过引用canvas父元素来调整大小
    */
   public resize() {
     if (!this._renderer) return;
@@ -132,7 +132,7 @@ export class Viewer {
   }
 
   /**
-   * VRMのheadノードを参照してカメラ位置を調整する
+   * 参照VRM的head节点调整相机位置
    */
   public resetCamera() {
     const headNode = this.model?.vrm?.humanoid.getNormalizedBoneNode("head");

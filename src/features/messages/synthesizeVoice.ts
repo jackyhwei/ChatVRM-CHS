@@ -1,6 +1,7 @@
 import { reduceTalkStyle } from "@/utils/reduceTalkStyle";
-import { koeiromapV0 } from "../koeiromap/koeiromap";
+//import { koeiromapV0 } from "../koeiromap/koeiromap";
 import { TalkStyle } from "../messages/messages";
+import { omtts } from "../omserver/omtts";
 
 export async function synthesizeVoice(
   message: string,
@@ -8,8 +9,10 @@ export async function synthesizeVoice(
   speakerY: number,
   style: TalkStyle
 ) {
-  const koeiroRes = await koeiromapV0(message, speakerX, speakerY, style);
-  return { audio: koeiroRes.audio };
+  //const koeiroRes = await koeiromapV0(message, speakerX, speakerY, style);
+  //return { audio: koeiroRes.audio };
+  const audio_url = await omtts(message, speakerX, speakerY, style);
+  
 }
 
 export async function synthesizeVoiceApi(
@@ -19,7 +22,7 @@ export async function synthesizeVoiceApi(
   style: TalkStyle,
   apiKey: string
 ) {
-  // Free向けに感情を制限する
+ // 限制对Free的感情
   const reducedStyle = reduceTalkStyle(style);
 
   const body = {
